@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Password Master：在浏览器本地生成高强度密码，密码不会上传。"
+    />
+    <title>Password Master · 本地密码生成器</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#password">跳到密码</a>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="top">
+      <p class="brand">Password Master</p>
+      <p class="pledge">
+        <span class="dot" aria-hidden="true"></span>
+        仅在本机浏览器生成，密码不会离开你的设备
+      </p>
+    </header>
+
+    <main class="stage">
+      <section class="hero" aria-labelledby="password-heading">
+        <div class="hero-copy">
+          <p class="kicker">本地 · 无账号 · 无上传</p>
+          <h1 id="password-heading">十秒内拿到一条强密码</h1>
+          <p class="lede">
+            打开即可使用。规则改完立刻重算。复制按钮是主操作。
+          </p>
+        </div>
+
+        <div class="vault">
+          <div class="vault-meta">
+            <span id="strength" class="strength" data-level="strong">
+              <span class="strength-bar" aria-hidden="true"></span>
+              <span class="strength-label">强</span>
+            </span>
+            <p id="strength-reason" class="strength-reason">
+              长度与字符种类足够，适合大多数账号。
+            </p>
+          </div>
+
+          <p id="charset-error" class="charset-error" hidden>
+            请至少选择一种字符
+          </p>
+
+          <div class="password-frame">
+            <label class="sr-only" for="password">当前密码</label>
+            <textarea
+              id="password"
+              class="password"
+              rows="2"
+              readonly
+              spellcheck="false"
+              autocomplete="off"
+            ></textarea>
+          </div>
+          <style>
+            .actions .btn {
+              background-color: #ff69b4;
+              border-color: #ff1493;
+              color: #ffffff;
+            }
+
+            .actions .btn:hover,
+            .actions .btn:focus-visible {
+              background-color: #ff1493;
+              border-color: #e0117a;
+            }
+          </style>
+   
+          <style>
+            .actions .btn {
+              background-color: #87cefa;
+              border-color: #5eb6e8;
+              color: #0b3a5b;
+            }
+
+            .actions .btn:hover,
+            .actions .btn:focus-visible {
+              background-color: #6ec4f5;
+              border-color: #3aa3e0;
+            }
+          </style>
+   
+
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="copy-btn">
+              复制
+            </button>
+            <button type="button" class="btn btn-ghost" id="regen-btn">
+              重新生成
+            </button>
+            <button
+              type="button"
+              class="btn btn-ghost"
+              id="toggle-visible"
+              aria-pressed="true"
+            >
+              隐藏
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="rules-heading">
+        <h2 id="rules-heading">生成规则</h2>
+
+        <div class="length-row">
+          <div class="length-head">
+            <label for="length">长度</label>
+            <output id="length-value" for="length">16</output>
+          </div>
+          <input
+            id="length"
+            type="range"
+            min="8"
+            max="64"
+            value="16"
+            step="1"
+          />
+          <input
+            id="length-number"
+            class="length-number"
+            type="number"
+            min="8"
+            max="64"
+            value="16"
+            inputmode="numeric"
+            aria-label="密码长度数字"
+          />
+        </div>
+
+        <fieldset class="charset">
+          <legend>字符类型</legend>
+          <label class="check">
+            <input type="checkbox" id="lower" checked />
+            <span>小写 a–z</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="upper" checked />
+            <span>大写 A–Z</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="digits" checked />
+            <span>数字 0–9</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="symbols" checked />
+            <span>符号</span>
+          </label>
+        </fieldset>
+
+        <label class="check check-block">
+          <input type="checkbox" id="exclude-ambiguous" checked />
+          <span>排除易混淆字符（0 O o 1 l I |）</span>
+        </label>
+
+        <p class="symbol-preview">
+          符号集合：
+          <code id="symbol-set"></code>
+        </p>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <details class="about">
+        <summary>算法与隐私说明</summary>
+        <div class="about-body">
+          <p>
+            密码用浏览器的 <code>crypto.getRandomValues</code>
+            均匀抽取字符，不经过服务器。本页没有账号，也不会把生成结果写进网址或本地历史。
+          </p>
+          <p>
+            只会把你选的长度和开关记在本机，方便下次打开还是同一套规则。强度按字符表大小和长度估算，供参考，不保证某个网站一定接受。
+          </p>
+          <p>
+            默认符号不含空格、引号和反斜杠，减少登录框解析出错。若目标网站不允许符号，关掉「符号」即可立刻重生成。
+          </p>
+        </div>
+      </details>
+      <p class="credit">Password Master · V1 本地生成器</p>
+    </footer>
+
+    <noscript>
+      <p class="noscript">请启用 JavaScript，才能在浏览器本地生成密码。</p>
+    </noscript>
+    <script src="./js/app.js" defer></script>
+  </body>
+</html>
